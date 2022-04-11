@@ -7,4 +7,5 @@ var settings = new Settings(@"C:\SourceCode\CDD");
 
 var serviceProvider = new ServiceCollection().AddLogging()
     .AddSingleton(settings)
+    .AddTransient<IJsonFileReader, JsonFileReader>()
     .BuildServiceProvider();

@@ -1,9 +1,10 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using FeatureFlagHelper;
 using Microsoft.Extensions.DependencyInjection;
 
-var serviceProvider = new ServiceCollection()
-    .AddLogging()
-    .BuildServiceProvider();
+var settings = new Settings(@"C:\SourceCode\CDD");
 
-Console.WriteLine("Hello, World!");
+var serviceProvider = new ServiceCollection().AddLogging()
+    .AddSingleton(settings)
+    .BuildServiceProvider();

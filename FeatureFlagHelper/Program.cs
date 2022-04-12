@@ -1,10 +1,13 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using FeatureFlagHelper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
-var settings = new Settings(@"C:\SourceCode\CDD");
+var configuration = new ConfigurationBuilder().AddJsonFile("appSettings.json").Build();
+
+var settings = new Settings(configuration["enumPath"], configuration["jsonFilesDirectory"]);
 
 var serviceProvider = new ServiceCollection().AddLogging()
     .AddSingleton(settings)

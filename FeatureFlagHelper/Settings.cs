@@ -2,10 +2,10 @@
 
 public record Settings
 {
-    public Settings(string basePath)
+    public Settings(string enumPath, string jsonFilesDirectory)
     {
-        EnumPath = $@"{basePath}\src\CDD.FeatureFlags/AvailableFlags.cs";
-        JsonFilePaths = Directory.GetFiles($@"{basePath}\src\Shared", "*.*.json");
+        EnumPath = enumPath;
+        JsonFilePaths = Directory.GetFiles(jsonFilesDirectory, "*.*.json");
     }
 
     public string EnumPath { get; }

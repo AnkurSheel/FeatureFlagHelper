@@ -5,21 +5,24 @@ namespace FeatureFlagHelper;
 
 public interface IJsonFileReader
 {
-    JsonObject GetFlagsFromFile(string fileName);
+    JsonObject GetRootJsonObject(string fileName);
 
-    JsonObject GetFeatureFlagSection(JsonNode jsonNode);
+    JsonObject GetFeatureFlagObject(JsonNode jsonNode);
+
+    IReadOnlyCollection<string> GetFeatureFlags(string filename);
 }
 
 public class JsonFileReader : IJsonFileReader
 {
-    public JsonFileReader()
-    {
-    }
-
-    public JsonObject GetFlagsFromFile(string fileName)
+    public JsonObject GetRootJsonObject(string fileName)
     {
         var jsonString = File.ReadAllText(fileName);
-        var jsonNode = JsonNode.Parse(jsonString, documentOptions:new JsonDocumentOptions{CommentHandling = JsonCommentHandling.Skip});
+        var jsonNode = JsonNode.Parse(
+            jsonString,
+            documentOptions: new JsonDocumentOptions
+            {
+                CommentHandling = JsonCommentHandling.Skip
+            });
 
         if (jsonNode == null)
         {
@@ -29,7 +32,7 @@ public class JsonFileReader : IJsonFileReader
         return jsonNode.AsObject();
     }
 
-    public  JsonObject GetFeatureFlagSection(JsonNode jsonNode)
+    public JsonObject GetFeatureFlagObject(JsonNode jsonNode)
     {
         var featureFlagsSection = jsonNode["FeatureFlags"];
 
@@ -39,5 +42,12 @@ public class JsonFileReader : IJsonFileReader
         }
 
         return featureFlagsSection.AsObject();
+    }
+
+    public IReadOnlyCollection<string> GetFeatureFlags(string filename)
+    {
+        var jsonObject = GetRootJsonObject(filename);
+        var featureFlagObject = GetFeatureFlagObject(jsonObject);
+        return featureFlagObject.Select(x => x.Key).ToList();
     }
 }

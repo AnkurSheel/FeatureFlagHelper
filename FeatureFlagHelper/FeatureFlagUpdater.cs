@@ -32,8 +32,6 @@ public class FeatureFlagUpdater : IFeatureFlagUpdater
                 {
                     keys.Add(featureFlagName);
                 }
-
-                return keys;
             });
 
         UpdateJsons(
@@ -56,12 +54,7 @@ public class FeatureFlagUpdater : IFeatureFlagUpdater
         UpdateEnumFile(
             keys =>
             {
-                if (keys.Contains(featureFlagName))
-                {
-                    keys.Remove(featureFlagName);
-                }
-
-                return keys;
+                keys.Remove(featureFlagName);
             });
 
         UpdateJsons(featureFlagObject => featureFlagObject.Remove(featureFlagName));
@@ -71,8 +64,8 @@ public class FeatureFlagUpdater : IFeatureFlagUpdater
     {
         foreach (var file in _settings.JsonFilePaths)
         {
-            var jsonObject = _jsonFileReader.GetFlagsFromFile(file);
-            var featureFlagObject = _jsonFileReader.GetFeatureFlagSection(jsonObject);
+            var jsonObject = _jsonFileReader.GetRootJsonObject(file);
+            var featureFlagObject = _jsonFileReader.GetFeatureFlagObject(jsonObject);
 
             updateFunc(featureFlagObject);
 
@@ -80,13 +73,9 @@ public class FeatureFlagUpdater : IFeatureFlagUpdater
         }
     }
 
-    private void UpdateEnumFile(Func<List<string>, List<string>> updateFunc)
+    private void UpdateEnumFile(Action<List<string>> updateFunc)
     {
-        var jsonObject = _jsonFileReader.GetFlagsFromFile(_settings.JsonFilePaths.First());
-        var featureFlagObject = _jsonFileReader.GetFeatureFlagSection(jsonObject);
-
-        var keys = featureFlagObject.Select(x => x.Key).ToList();
-
+        var keys = _jsonFileReader.GetFeatureFlags(_settings.JsonFilePaths.First()).ToList();
         var allLines = File.ReadAllLines(_settings.EnumPath).Where(x => !keys.Contains(x.Trim().Replace(",", ""))).ToList();
         var index = allLines.Select(x => x.Trim()).ToList().IndexOf("}");
 
@@ -97,15 +86,20 @@ public class FeatureFlagUpdater : IFeatureFlagUpdater
             sb.AppendLine(allLines[i]);
         }
 
-        keys = updateFunc(keys);
+        updateFunc(keys);
 
         for (var i = 0; i < keys.Count - 1; i++)
         {
             sb.AppendLine($"        {keys[i]},");
         }
+
         sb.AppendLine($"        {keys.Last()}");
-        sb.AppendLine("    }");
-        sb.AppendLine("}");
+
+        for (var i = index; i < allLines.Count; i++)
+        {
+            sb.AppendLine(allLines[i]);
+        }
+
         File.WriteAllText(_settings.EnumPath, sb.ToString());
     }
 }

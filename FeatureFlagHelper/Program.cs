@@ -9,12 +9,7 @@ var configuration = new ConfigurationBuilder().AddJsonFile("appSettings.json").B
 
 var settings = new Settings(configuration["enumPath"], configuration["jsonFilesDirectory"]);
 
-var serviceProvider = new ServiceCollection().AddLogging()
-    .AddSingleton(settings)
-    .AddTransient<IJsonFileReader, JsonFileReader>()
-    .AddTransient<IJsonFileWriter, JsonFileWriter>()
-    .AddTransient<IFeatureFlagUpdater, FeatureFlagUpdater>()
-    .BuildServiceProvider();
+var serviceProvider = ServiceRegistry.RegisterServices(new ServiceCollection(), settings).BuildServiceProvider();
 
 var action = AnsiConsole.Prompt(new SelectionPrompt<string>().Title("What do you want to do?").AddChoices(Actions.AddFlag, Actions.RemoveFlag));
 

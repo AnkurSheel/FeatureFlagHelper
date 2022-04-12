@@ -11,17 +11,49 @@ var settings = new Settings(configuration["enumPath"], configuration["jsonFilesD
 
 var serviceProvider = ServiceRegistry.RegisterServices(new ServiceCollection(), settings).BuildServiceProvider();
 
-var action = AnsiConsole.Prompt(new SelectionPrompt<string>().Title("What do you want to do?").AddChoices(Actions.AddFlag, Actions.RemoveFlag));
+var action = AnsiConsole.Prompt(
+    new SelectionPrompt<string>().Title("What do you want to do?").AddChoices(Actions.AddFlag, Actions.RemoveFlag, Actions.EnableFlag, Actions.DisableFlag));
 
-var featureFlagName = AnsiConsole.Ask<string>("Enter the feature flag name");
+var featureFlagUpdater = serviceProvider.GetRequiredService<IFeatureFlagUpdater>();
+var jsonFileReader = serviceProvider.GetRequiredService<IJsonFileReader>();
+
+string? featureFlagName;
 
 switch (action)
 {
     case Actions.AddFlag:
-        serviceProvider.GetRequiredService<IFeatureFlagUpdater>().AddFlag(featureFlagName);
+        featureFlagName = AnsiConsole.Ask<string>("Enter the feature flag name");
+
+        featureFlagUpdater.AddFlag(featureFlagName);
         break;
 
     case Actions.RemoveFlag:
-        serviceProvider.GetRequiredService<IFeatureFlagUpdater>().RemoveFlag(featureFlagName);
+        featureFlagName = AnsiConsole.Ask<string>("Enter the feature flag name");
+
+        featureFlagUpdater.RemoveFlag(featureFlagName);
         break;
+
+    case Actions.EnableFlag:
+    {
+        var keys = jsonFileReader.GetFeatureFlags(settings.JsonFilePaths.First()).ToList();
+        featureFlagName = AnsiConsole.Prompt(
+            new SelectionPrompt<string>().Title("Which flag do you want to enable?").AddChoices(keys));
+
+        var jsonFiles = AnsiConsole.Prompt(
+            new MultiSelectionPrompt<string>().Title("Which environments do you want to update?").AddChoices(settings.JsonFilePaths));
+        featureFlagUpdater.UpdateFlag(featureFlagName, jsonFiles, true);
+        break;
+    }
+
+    case Actions.DisableFlag:
+    {
+        var keys = jsonFileReader.GetFeatureFlags(settings.JsonFilePaths.First()).ToList();
+        featureFlagName = AnsiConsole.Prompt(
+            new SelectionPrompt<string>().Title("Which flag do you want to enable?").AddChoices(keys));
+
+        var jsonFiles = AnsiConsole.Prompt(
+            new MultiSelectionPrompt<string>().Title("Which environments do you want to update?").AddChoices(settings.JsonFilePaths));
+        featureFlagUpdater.UpdateFlag(featureFlagName, jsonFiles, false);
+        break;
+    }
 }

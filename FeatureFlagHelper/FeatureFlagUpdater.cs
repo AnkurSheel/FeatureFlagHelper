@@ -8,6 +8,8 @@ public interface IFeatureFlagUpdater
     void RemoveFlag(string featureFlagName);
 
     void AddFlag(string featureFlagName);
+
+    void UpdateFlag(string featureFlagName, IReadOnlyCollection<string> jsonFilePaths, bool enable);
 }
 
 public class FeatureFlagUpdater : IFeatureFlagUpdater
@@ -34,7 +36,7 @@ public class FeatureFlagUpdater : IFeatureFlagUpdater
                 }
             });
 
-        UpdateJsons(
+        UpdateJsons(_settings.JsonFilePaths,
             featureFlagObject =>
             {
                 if (featureFlagObject.ContainsKey(featureFlagName))
@@ -57,12 +59,27 @@ public class FeatureFlagUpdater : IFeatureFlagUpdater
                 keys.Remove(featureFlagName);
             });
 
-        UpdateJsons(featureFlagObject => featureFlagObject.Remove(featureFlagName));
+        UpdateJsons(_settings.JsonFilePaths, featureFlagObject => featureFlagObject.Remove(featureFlagName));
     }
 
-    private void UpdateJsons(Action<JsonObject> updateFunc)
+    public void UpdateFlag(string featureFlagName, IReadOnlyCollection<string> jsonFilePaths, bool enable)
     {
-        foreach (var file in _settings.JsonFilePaths)
+        UpdateJsons(jsonFilePaths,
+            featureFlagObject =>
+            {
+                var featureFlagNode = featureFlagObject[featureFlagName];
+                if (featureFlagNode == null)
+                {
+                    return;
+                }
+
+                featureFlagNode["enabled"] = enable;
+            });
+    }
+
+    private void UpdateJsons(IReadOnlyCollection<string> jsonFilePaths, Action<JsonObject> updateFunc)
+    {
+        foreach (var file in jsonFilePaths)
         {
             var jsonObject = _jsonFileReader.GetRootJsonObject(file);
             var featureFlagObject = _jsonFileReader.GetFeatureFlagObject(jsonObject);

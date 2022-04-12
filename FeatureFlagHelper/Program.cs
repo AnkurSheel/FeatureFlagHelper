@@ -18,6 +18,8 @@ var featureFlagUpdater = serviceProvider.GetRequiredService<IFeatureFlagUpdater>
 var jsonFileReader = serviceProvider.GetRequiredService<IJsonFileReader>();
 
 string? featureFlagName;
+var keys = jsonFileReader.GetFeatureFlags(settings.JsonFilePaths.First()).ToList();
+keys.Sort();
 
 switch (action)
 {
@@ -35,7 +37,6 @@ switch (action)
 
     case Actions.EnableFlag:
     {
-        var keys = jsonFileReader.GetFeatureFlags(settings.JsonFilePaths.First()).ToList();
         featureFlagName = AnsiConsole.Prompt(
             new SelectionPrompt<string>().Title("Which flag do you want to enable?").AddChoices(keys));
 
@@ -47,7 +48,6 @@ switch (action)
 
     case Actions.DisableFlag:
     {
-        var keys = jsonFileReader.GetFeatureFlags(settings.JsonFilePaths.First()).ToList();
         featureFlagName = AnsiConsole.Prompt(
             new SelectionPrompt<string>().Title("Which flag do you want to disable?").AddChoices(keys));
 

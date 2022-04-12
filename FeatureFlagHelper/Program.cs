@@ -49,7 +49,7 @@ switch (action)
     {
         var keys = jsonFileReader.GetFeatureFlags(settings.JsonFilePaths.First()).ToList();
         featureFlagName = AnsiConsole.Prompt(
-            new SelectionPrompt<string>().Title("Which flag do you want to enable?").AddChoices(keys));
+            new SelectionPrompt<string>().Title("Which flag do you want to disable?").AddChoices(keys));
 
         var jsonFiles = AnsiConsole.Prompt(
             new MultiSelectionPrompt<string>().Title("Which environments do you want to update?").AddChoices(settings.JsonFilePaths));

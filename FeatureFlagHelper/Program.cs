@@ -10,3 +10,5 @@ var serviceProvider = new ServiceCollection().AddLogging()
     .AddTransient<IJsonFileReader, JsonFileReader>()
     .AddTransient<IJsonFileWriter, JsonFileWriter>()
     .BuildServiceProvider();
+
+var featureFlagName = AnsiConsole.Ask<string>("Enter the feature flag name");

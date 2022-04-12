@@ -1,10 +1,13 @@
 
 A console app to update feature flags file.
+
 Currently supports
 - Adding a new flag
 - Removing an existing flag
 - Enabling a flag
 - Disabling a flags
+
+Provides a list of available flags and environments when enabling/disabling flags.
 
 ## Usage 
 

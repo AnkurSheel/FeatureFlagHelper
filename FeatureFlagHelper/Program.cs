@@ -57,3 +57,5 @@ switch (action)
         break;
     }
 }
+
+AnsiConsole.MarkupLine($"[green]Updated files[/]");

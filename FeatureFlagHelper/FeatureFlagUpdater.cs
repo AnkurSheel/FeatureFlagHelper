@@ -46,9 +46,7 @@ public class FeatureFlagUpdater : IFeatureFlagUpdater
 
     private void UpdateJsons(Action<JsonObject> updateFunc)
     {
-        var jsonFiles = Directory.GetFiles(_settings.JsonFolder, "*.*.json");
-
-        foreach (var file in jsonFiles)
+        foreach (var file in _settings.JsonFilePaths)
         {
             var jsonObject = _jsonFileReader.GetFlagsFromFile(file);
             var featureFlagObject = _jsonFileReader.GetFeatureFlagSection(jsonObject);

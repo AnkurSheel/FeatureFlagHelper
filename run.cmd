@@ -1,3 +1,3 @@
-pushd FeatureFlagHelper
+pushd FeatureFlagHelperConsole
 dotnet run
 popd

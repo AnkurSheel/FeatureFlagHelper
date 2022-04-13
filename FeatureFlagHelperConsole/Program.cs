@@ -1,6 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using FeatureFlagHelper;
+﻿using FeatureFlagHelper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;

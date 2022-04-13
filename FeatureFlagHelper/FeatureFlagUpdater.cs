@@ -46,7 +46,9 @@ public class FeatureFlagUpdater : IFeatureFlagUpdater
 
                 featureFlagObject[featureFlagName] = new JsonObject
                 {
-                    ["enabled"] = false
+                    ["enabled"] = false,
+                    ["created"] = DateTime.Today.ToString("yyyy-MM-dd"),
+                    ["updated"] = DateTime.Today.ToString("yyyy-MM-dd")
                 };
             });
     }
@@ -74,6 +76,7 @@ public class FeatureFlagUpdater : IFeatureFlagUpdater
                 }
 
                 featureFlagNode["enabled"] = enable;
+                featureFlagNode["updated"] = DateTime.Today.ToString("yyyy-MM-dd");
             });
     }
 

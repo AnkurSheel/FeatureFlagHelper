@@ -12,6 +12,6 @@ Provides a list of available flags and environments when enabling/disabling flag
 ## Usage 
 
 1. Update appSettings.json with the correct paths
-   1. **enumPath**: Absolute path to the num file for flags
+   1. **enumPath**: Absolute path to the enum file for flags
    2. **jsonFilesDirectory**: Absolute path to the folder where all the feature flag jsons are stored
 2. Run run.cmd and follow the prompts

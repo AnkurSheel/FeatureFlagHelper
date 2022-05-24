@@ -1,4 +1,4 @@
-﻿using FeatureFlagHelper;
+﻿using FeatureFlagHelperConsole;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;

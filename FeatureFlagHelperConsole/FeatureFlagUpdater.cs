@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json.Nodes;
 
-namespace FeatureFlagHelper;
+namespace FeatureFlagHelperConsole;
 
 public interface IFeatureFlagUpdater
 {

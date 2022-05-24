@@ -1,4 +1,4 @@
-﻿namespace FeatureFlagHelper;
+﻿namespace FeatureFlagHelperConsole;
 
 public class Actions
 {

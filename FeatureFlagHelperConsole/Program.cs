@@ -41,7 +41,7 @@ while (true)
             featureFlagUpdater.AddFlag(featureFlagName);
             break;
         case Actions.RemoveFlag:
-            featureFlagName = AnsiConsole.Ask<string>("Enter the feature flag name");
+            featureFlagName = AnsiConsole.Prompt(new SelectionPrompt<string>().Title("Which flag do you want to remove?").AddChoices(keys));
 
             featureFlagUpdater.RemoveFlag(featureFlagName);
             break;
@@ -65,5 +65,5 @@ while (true)
         }
     }
 
-    AnsiConsole.MarkupLine("[green]Updated files[/]");
+    AnsiConsole.MarkupLine($"[green]Updated files[/]{Environment.NewLine}");
 }

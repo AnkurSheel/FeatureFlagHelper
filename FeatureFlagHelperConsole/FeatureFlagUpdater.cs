@@ -36,7 +36,8 @@ public class FeatureFlagUpdater : IFeatureFlagUpdater
                 }
             });
 
-        UpdateJsons(_settings.JsonFilePaths,
+        UpdateJsons(
+            _settings.JsonFilePaths,
             featureFlagObject =>
             {
                 if (featureFlagObject.ContainsKey(featureFlagName))
@@ -66,10 +67,12 @@ public class FeatureFlagUpdater : IFeatureFlagUpdater
 
     public void UpdateFlag(string featureFlagName, IReadOnlyCollection<string> jsonFilePaths, bool enable)
     {
-        UpdateJsons(jsonFilePaths,
+        UpdateJsons(
+            jsonFilePaths,
             featureFlagObject =>
             {
                 var featureFlagNode = featureFlagObject[featureFlagName];
+
                 if (featureFlagNode == null)
                 {
                     return;
@@ -97,6 +100,15 @@ public class FeatureFlagUpdater : IFeatureFlagUpdater
     {
         var keys = _jsonFileReader.GetFeatureFlags(_settings.JsonFilePaths.First()).ToList();
         var allLines = File.ReadAllLines(_settings.EnumPath).Where(x => !keys.Contains(x.Trim().Replace(",", ""))).ToList();
+        updateFunc(keys);
+
+        var contents = GetFileContents(allLines, keys);
+
+        File.WriteAllText(_settings.EnumPath, contents);
+    }
+
+    private string GetFileContents(IReadOnlyList<string> allLines, IReadOnlyList<string> keys)
+    {
         var index = allLines.Select(x => x.Trim()).ToList().IndexOf("}");
 
         var sb = new StringBuilder();
@@ -107,8 +119,6 @@ public class FeatureFlagUpdater : IFeatureFlagUpdater
         {
             sb.AppendLine(allLines[i]);
         }
-
-        updateFunc(keys);
 
         for (var i = 0; i < keys.Count - 1; i++)
         {
@@ -122,6 +132,6 @@ public class FeatureFlagUpdater : IFeatureFlagUpdater
             sb.AppendLine(allLines[i]);
         }
 
-        File.WriteAllText(_settings.EnumPath, sb.ToString());
+        return sb.ToString();
     }
 }

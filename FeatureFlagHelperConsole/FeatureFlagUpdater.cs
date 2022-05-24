@@ -49,7 +49,8 @@ public class FeatureFlagUpdater : IFeatureFlagUpdater
                 {
                     ["enabled"] = false,
                     ["created"] = DateTime.Today.ToString("yyyy-MM-dd"),
-                    ["updated"] = DateTime.Today.ToString("yyyy-MM-dd")
+                    ["updated"] = DateTime.Today.ToString("yyyy-MM-dd"),
+                    ["ownedBy"] = _settings.OwnedBy
                 };
             });
     }

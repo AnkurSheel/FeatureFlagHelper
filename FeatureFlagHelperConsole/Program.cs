@@ -5,7 +5,7 @@ using Spectre.Console;
 
 var configuration = new ConfigurationBuilder().AddJsonFile("appSettings.json").Build();
 
-var settings = new Settings(configuration["enumPath"], configuration["jsonFilesDirectory"]);
+var settings = new Settings(configuration["enumPath"], configuration["jsonFilesDirectory"], configuration["ownedBy"]);
 
 var serviceProvider = ServiceRegistry.RegisterServices(new ServiceCollection(), settings).BuildServiceProvider();
 

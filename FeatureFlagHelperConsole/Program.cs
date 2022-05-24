@@ -12,11 +12,11 @@ var serviceProvider = ServiceRegistry.RegisterServices(new ServiceCollection(), 
 var featureFlagUpdater = serviceProvider.GetRequiredService<IFeatureFlagUpdater>();
 var jsonFileReader = serviceProvider.GetRequiredService<IJsonFileReader>();
 
-var keys = jsonFileReader.GetFeatureFlags(settings.JsonFilePaths.First()).ToList();
-keys.Sort();
-
 while (true)
 {
+    var keys = jsonFileReader.GetFeatureFlags(settings.JsonFilePaths.First()).ToList();
+    keys.Sort();
+    
     var action = AnsiConsole.Prompt(
         new SelectionPrompt<string>().Title("What do you want to do?")
         .AddChoices(

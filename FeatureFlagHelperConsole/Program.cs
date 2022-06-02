@@ -5,7 +5,11 @@ using Spectre.Console;
 
 var configuration = new ConfigurationBuilder().AddJsonFile("appSettings.json").Build();
 
-var settings = new Settings(configuration["enumPath"], configuration["jsonFilesDirectory"], configuration["ownedBy"]);
+var settings = new Settings(
+    configuration["enumPath"],
+    configuration["jsonFilesDirectory"],
+    configuration["ownedBy"],
+    configuration["jsonFilesSearchPattern"]);
 
 var serviceProvider = ServiceRegistry.RegisterServices(new ServiceCollection(), settings).BuildServiceProvider();
 
@@ -16,7 +20,7 @@ while (true)
 {
     var keys = jsonFileReader.GetFeatureFlags(settings.JsonFilePaths.First()).ToList();
     keys.Sort();
-    
+
     var action = AnsiConsole.Prompt(
         new SelectionPrompt<string>().Title("What do you want to do?")
         .AddChoices(

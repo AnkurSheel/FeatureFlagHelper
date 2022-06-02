@@ -2,7 +2,7 @@
 
 public record Settings
 {
-    public Settings(string enumPath, string jsonFilesDirectory, string ownedBy)
+    public Settings(string enumPath, string jsonFilesDirectory, string ownedBy, string jsonFilesSearchPattern)
     {
         if (string.IsNullOrWhiteSpace(enumPath) || string.IsNullOrWhiteSpace(jsonFilesDirectory) || string.IsNullOrWhiteSpace(ownedBy))
         {
@@ -11,7 +11,7 @@ public record Settings
         
         EnumPath = enumPath;
         OwnedBy = ownedBy;
-        JsonFilePaths = Directory.GetFiles(jsonFilesDirectory, "*.*.json");
+        JsonFilePaths = Directory.GetFiles(jsonFilesDirectory, jsonFilesSearchPattern);
     }
 
     public string EnumPath { get; }
